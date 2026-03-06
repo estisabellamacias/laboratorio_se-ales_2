@@ -123,13 +123,22 @@ h[n] = {5,6,0,0,9,4,8} - x[n] = {1,0,1,1,2,0,2,1,8,2}
 
 #### Representación gráfica y secuencial usando Python. 
 
-### ***Parte A – Correlación***
+### ***Parte B – Correlación***
 
-Se definieron dos señales discretas: x1[nTs] = cos(2π100nTs) - x2[nTs] = sin(2π100nTs) con un periodo de muestreo: Ts = 1.25 ms
+Se definieron dos señales discretas: x1[nTs] = cos(2π100nTs) - x2[nTs] = sin(2π100nTs) con un periodo de muestreo: Ts = 1.25 ms, se encontró la correlación cruzada de ambas señales, la representación grafica y la secuencia resultante 
+<p align="center">
+<img src="PARTE B/grafica y correlacion.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica . Grafica de cada señal y la correlación cruzada de ambas señales.</em>
+</p>
+<p align="center">
+<img src="PARTE B/datos parte b.jpeg" width="600">
+</p>
+<p align="center">
+<em>Tabla . Tabla con la secuencia resultante.</em>
+</p>
 
-#### Correlación cruzada entre ambas señales.
-
-#### Representación gráfica y secuencia resultante.
 
 #### ¿En qué situaciones resulta útil aplicar la correlación cruzada en el procesamiento digital de señales? 
 
