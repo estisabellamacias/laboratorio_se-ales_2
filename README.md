@@ -233,6 +233,206 @@ La frecuencia de muestreo seria 800Hz pero se utilizo 1000Hz para mejorar la ima
 <em>Grafica 11.Histograma.</em>
 </p>
 
+## Codigos utilizados 
+
+### Codigo en C:
+
+Este código implementa la captura de señales biomédicas utilizando un microcontrolador en este caso la STM32.
+
+**Estructura de Datos**
+
+Se definen variables globales para el manejo de la información capturada:
+
+- `uint32_t datos`: Almacena la conversión actual del ADC asistida por DMA.
+- `uint8_t datosenvio[50]`: Buffer de transmisión que acumula 25 muestras (cada una dividida en 2 bytes, sumando 50 bytes) antes de enviarlas por USB.
+- `int contador`: Índice que rastrea el llenado del buffer para asegurar que siempre se envíen paquetes completos de 50 bytes.
+
+**Configuración de Periféricos (HAL)**
+
+En la función `main`, se inicializan los módulos críticos:
+
+- `MX_ADC1_Init()`: Configura el ADC1 para trabajar con disparador externo del Timer 3 (`ADC_EXTERNALTRIGCONV_T3_TRGO`), permitiendo un muestreo preciso.
+- `MX_TIM3_Init()`: Establece la frecuencia de muestreo. El Timer 3 actúa como el "reloj" que le indica al ADC cuándo tomar una muestra.
+- `MX_USB_DEVICE_Init()`: Prepara la interfaz USB CDC (Puerto COM Virtual) para enviar los datos a la computadora.
+
+**Lógica de Captura y Procesamiento**
+(`HAL_ADC_ConvCpltCallback`)
+
+Esta es la parte más importante del algoritmo, donde se gestiona la interrupción por conversión completa:
+
+**• División de Bytes (Byte Splitting)**
+
+Como el ADC entrega valores de 12 bits y el protocolo USB transmite datos en bytes (8 bits), cada muestra se divide en dos:
+
+```c
+datosenvio[contador++] = datos[0] & 0xFF;
+datosenvio[contador++] = (datos[0] >> 8) & 0xFF;
+```
+- El primer byte guarda los 8 bits menos significativos.
+- El segundo byte guarda los bits restantes desplazados.
+
+**• Transmisión por USB:** Cuando el contador llega a 50 bytes (25 muestras), se dispara la función `CDC_Transmit_FS(datosenvio, 50)`; enviando el paquete a la computadora para su posterior análisis en Python. 
+
+### Codigo en Python:
+
+**Arquitectura y Librerías Utilizadas**
+
+El código utiliza varias librerías especializadas de Python para realizar el procesamiento y análisis de las señales:
+
+- `numpy`: Permite realizar operaciones matemáticas eficientes y manipular arreglos de datos numéricos.
+- `matplotlib`: Se utiliza para generar las gráficas que permiten visualizar las señales y los resultados del análisis.
+- `scipy.fft`: Implementa la Transformada Rápida de Fourier para analizar el contenido frecuencial de la señal.
+- `scipy.signal`: Proporciona herramientas de análisis espectral como el método de Welch para calcular la densidad espectral de potencia.
+
+**Procesamiento de Convolución**
+
+En la primera sección del código se implementa el cálculo de la convolución discreta entre dos secuencias. Esta operación permite determinar la salida de un sistema lineal e invariante en el tiempo cuando se conoce su respuesta al impulso.
+
+Las señales utilizadas son:
+
+- `x[n]`: señal de entrada asociada a los dígitos de la cédula.
+- `h[n]`: respuesta del sistema asociada al código asignado.
+
+El cálculo de la convolución se realiza mediante la función:
+
+```python
+y = np.convolve(x, h)
+```
+
+La secuencia resultante `y[n]` representa la salida del sistema al aplicar la señal de entrada.
+
+Además del cálculo numérico, el código genera tres representaciones gráficas que permiten visualizar el proceso completo:
+
+- La señal de entrada `x[n]`
+- La respuesta del sistema `h[n]`
+- La señal resultante `y[n] = x[n] * h[n]`
+
+**Cálculo de Correlación Cruzada**
+
+En la segunda sección del código se calcula la correlación cruzada entre dos señales periódicas para analizar su nivel de similitud.
+
+Las señales utilizadas se definen de la siguiente forma:
+
+```python
+x1[nTs] = cos(2π100nTs)
+x2[nTs] = sin(2π100nTs)
+```
+
+Estas señales tienen una frecuencia de 100 Hz y se generan a partir de un periodo de muestreo de 1.25 ms.
+
+El cálculo de la correlación cruzada se realiza utilizando:
+
+```python
+r_x1x2 = np.correlate(x1, x2, mode='full')
+```
+
+La secuencia resultante muestra el grado de similitud entre ambas señales para diferentes desplazamientos temporales (`lags`).
+
+En el análisis del resultado se observa que:
+
+- La secuencia presenta un comportamiento antisimétrico.
+- El valor en `lag = 0` es cercano a cero.
+
+Esto ocurre porque las funciones seno y coseno son ortogonales, por lo que su correlación en fase es mínima.
+
+El resultado también se representa gráficamente mediante un diagrama tipo *stem*, donde se observa la amplitud de la correlación para cada desplazamiento.
+
+**Carga y Procesamiento de Señal Biológica**
+
+La tercera sección del código realiza el análisis de una señal biológica de tipo Electrooculografía (EOG).
+
+La señal se carga desde un archivo de texto mediante:
+
+```python
+raw_data = np.loadtxt(archivo)
+```
+
+La frecuencia de muestreo utilizada para esta señal es:
+
+```
+fs_eog = 1000 Hz
+```
+
+Esto significa que se registran 1000 muestras por segundo.
+
+**Normalización de la Señal**
+
+Para facilitar el análisis y comparación de los datos, la señal se normaliza al rango de amplitud [-1, 1] mV mediante una transformación lineal.
+
+```python
+eog_norm = 2*(raw_data - np.min(raw_data))/(np.max(raw_data)-np.min(raw_data)) - 1
+```
+
+Este proceso elimina diferencias de escala y permite analizar únicamente la forma de la señal.
+
+**Caracterización Estadística de la Señal**
+
+El código calcula varios parámetros estadísticos que permiten describir el comportamiento de la señal en el dominio del tiempo:
+
+- `Media`: valor promedio de la señal.
+- `Mediana`: valor central de la distribución.
+- `Desviación estándar`: mide la dispersión de los datos.
+- `Máximo`: mayor valor de amplitud registrado.
+- `Mínimo`: menor valor de amplitud registrado.
+
+**Análisis en el Dominio de la Frecuencia**
+
+Para estudiar el contenido frecuencial de la señal se utiliza la Transformada Rápida de Fourier.
+
+```python
+yf = fft(eog_norm)
+xf = fftfreq(N, 1/fs_eog)
+```
+
+La FFT permite transformar la señal desde el dominio del tiempo hacia el dominio de la frecuencia, mostrando qué componentes frecuenciales están presentes en la señal.
+
+Adicionalmente se calcula la Densidad Espectral de Potencia utilizando el método de Welch:
+
+```python
+f_psd, psd = welch(eog_norm, fs_eog, nperseg=1024)
+```
+
+Este método permite estimar de manera más estable cómo se distribuye la energía de la señal en diferentes frecuencias.
+
+**Estadísticos Espectrales**
+
+A partir de la densidad espectral de potencia se calculan diferentes parámetros que describen el comportamiento espectral de la señal:
+
+- `Frecuencia media`: frecuencia promedio ponderada por la potencia.
+- `Frecuencia mediana`: frecuencia que divide el espectro en dos partes de igual energía.
+- `Desviación estándar espectral`: indica la dispersión de la energía alrededor de la frecuencia media.
+
+Estos valores permiten caracterizar el contenido frecuencial dominante de la señal.
+
+**Visualización de Resultados**
+
+El código genera varias gráficas para facilitar la interpretación del análisis realizado:
+
+- Señal EOG en el dominio del tiempo.
+- Magnitud de la Transformada de Fourier.
+- Densidad Espectral de Potencia (PSD).
+- Histograma de amplitudes de la señal.
+
+## Diagramas de flujo
+
+### Codigo en C
+
+<p align="center">
+<img src="DIAGRAMAS/Diagrama de flujo codigo c.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica 12. Diagrama de flujo codigo en C.</em>
+</p>
+
+### Codigo en Python
+
+<p align="center">
+<img src="DIAGRAMAS/Diagra,a de flujo python.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica 13. Diagrama de flujo codigo en Python.</em>
+</p>
+
 ## Análisis de resultados 
 
 *- Análisis 1: Determine el alcance y las posibles limitaciones de herramientas matemáticas como la convolución y la correlación en el análisis de señales biomédicas.*
