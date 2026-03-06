@@ -71,7 +71,21 @@ h[n] = {5,6,0,0,9,0,5} - x[n] = {1,0,1,4,9,9,0,0,4,9}
 
 #### Señal 𝑦[𝑛] resultante de la convolución usando Python. 
 
-#### Representación gráfica y secuencial usando Python. 
+<p align="center">
+<img src="PARTE A/y(n) con python est 1.jpeg" width="600">
+</p>
+<p align="center">
+<em>Imagen 2. Calculo convolución con Python estudiante 1.</em>
+</p>
+
+#### Representación gráfica usando Python. 
+
+<p align="center">
+<img src="PARTE A/convolucion python est 1.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica 4. Representación grafica usando Python estudiante 1.</em>
+</p>
 
 
 ### ***Estudiante 2***
@@ -88,7 +102,7 @@ h[n] = {5,6,0,0,9,4,8} - x[n] = {1,0,1,1,2,0,2,1,8,2}
 <img src="PARTE A/Calculo manual est 2.jpg" width="600">
 </p>
 <p align="center">
-<em>Imagen 2. Calculo manual convolución estudiante 2.</em>
+<em>Imagen 3. Calculo manual convolución estudiante 2.</em>
 </p>
 
 #### Representación gráfica y secuencial (a mano):
@@ -97,19 +111,19 @@ h[n] = {5,6,0,0,9,4,8} - x[n] = {1,0,1,1,2,0,2,1,8,2}
 <img src="PARTE A/Grafica h(n) est 2.jpeg" width="600">
 </p>
 <p align="center">
-<em>Grafica 4. Representación grafica h(n) estudiante 2.</em>
+<em>Grafica 5. Representación grafica h(n) estudiante 2.</em>
 </p>
 <p align="center">
 <img src="PARTE A/Grafica x(n) est 2.jpeg" width="600">
 </p>
 <p align="center">
-<em>Grafica 5. Representación grafica x(n) estudiante 2.</em>
+<em>Grafica 6. Representación grafica x(n) estudiante 2.</em>
 </p>
 <p align="center">
 <img src="PARTE A/Grafica y(n) est 2.jpeg" width="600">
 </p>
 <p align="center">
-<em>Grafica 6. Representación grafica y(n) estudiante 2.</em>
+<em>Grafica 7. Representación grafica y(n) estudiante 2.</em>
 </p>
 <p align="center">
 <img src="PARTE A/Representacion secuencial est 2.jpeg" width="600">
@@ -120,12 +134,26 @@ h[n] = {5,6,0,0,9,4,8} - x[n] = {1,0,1,1,2,0,2,1,8,2}
 
 
 #### Señal 𝑦[𝑛] resultante de la convolución usando Python. 
+<p align="center">
+<img src="PARTE A/y(n) con python est 2.jpeg" width="600">
+</p>
+<p align="center">
+<em>Imagen 4. Calculo convolución con Python estudiante 2.</em>
+</p>
 
-#### Representación gráfica y secuencial usando Python. 
+#### Representación gráfica usando Python. 
+
+<p align="center">
+<img src="PARTE A/convolucion python est 2.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica 8. Representación grafica usando Python estudiante 2.</em>
+</p>
+
 
 ### ***Parte B – Correlación***
 
-Se definieron dos señales discretas: x1[nTs] = cos(2π100nTs) - x2[nTs] = sin(2π100nTs) con un periodo de muestreo: Ts = 1.25 ms, se encontró la correlación cruzada de ambas señales, la representación grafica y la secuencia resultante 
+Se definieron dos señales discretas: x1[nTs] = cos(2π100nTs) - x2[nTs] = sin(2π100nTs) con un periodo de muestreo: Ts = 1.25 ms, se encontró la correlación cruzada de ambas señales, la representación grafica y la secuencia resultante como se muestra a continuación.
 <p align="center">
 <img src="PARTE B/grafica y correlacion.jpeg" width="600">
 </p>
@@ -139,8 +167,9 @@ Se definieron dos señales discretas: x1[nTs] = cos(2π100nTs) - x2[nTs] = sin(2
 <em>Tabla . Tabla con la secuencia resultante.</em>
 </p>
 
-
 #### ¿En qué situaciones resulta útil aplicar la correlación cruzada en el procesamiento digital de señales? 
+
+La correlación cruzada es útil cuando se desea medir el grado de similitud entre dos señales o determinar el desfase temporal entre ellas. En procesamiento digital de señales se utiliza en aplicaciones como detección de patrones, sincronización de señales, localización de eventos en una señal y reconocimiento de señales en presencia de ruido, por ejemplo en el análisis de señales biomédicas como ECG o EEG.
 
 ### ***Parte C – Análisis de señal biológica***
 
