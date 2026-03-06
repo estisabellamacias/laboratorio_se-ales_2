@@ -158,13 +158,13 @@ Se definieron dos señales discretas: x1[nTs] = cos(2π100nTs) - x2[nTs] = sin(2
 <img src="PARTE B/grafica y correlacion.jpeg" width="600">
 </p>
 <p align="center">
-<em>Grafica . Grafica de cada señal y la correlación cruzada de ambas señales.</em>
+<em>Grafica 8 . Grafica de cada señal y la correlación cruzada de ambas señales.</em>
 </p>
 <p align="center">
 <img src="PARTE B/datos parte b.jpeg" width="600">
 </p>
 <p align="center">
-<em>Tabla . Tabla con la secuencia resultante.</em>
+<em>Tabla 3. Tabla con la secuencia resultante.</em>
 </p>
 
 #### ¿En qué situaciones resulta útil aplicar la correlación cruzada en el procesamiento digital de señales? 
@@ -176,36 +176,62 @@ La correlación cruzada es útil cuando se desea medir el grado de similitud ent
 Se generó una señal biológica utilizando un generador de señales y posteriormente se digitalizó.
 
 
-#### Frecuencia de Nyquist para la señal generada.
-#### Frecuencia de muestreo de 4 veces la frecuencia de Nyquist.
+#### Frecuencia de Nyquist para la señal generada:
+La frecuencia de Nyquist es 200Hz 
+#### Frecuencia de muestreo de 4 veces la frecuencia de Nyquist:
+La frecuencia de muestreo seria 800Hz pero se utilizo 1000Hz para mejorar la imagen
+
+<p align="center">
+<img src="PARTE C/señal normalizada.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica 9. Señal resultante.</em>
+</p>
+
 #### Caracterizar la señal obteniendo:
 
-***- Media:***
+<p align="center">
+<img src="PARTE C/punto 3.jpeg" width="600">
+</p>
+<p align="center">
+<em>Imagen 5. Media, mediana, desviación estándar, máximo, mínimo.</em>
+</p>
 
-***- Mediana:*** 
-
-***- Desviación estándar:***
-
-***- Máximo:*** 
-
-***Mínimo:***
 #### Clasificación de la señal según su tipo (determinística/aleatoria, periódica/aparádica, analógica/digital).
+
+<p align="center">
+<img src="PARTE C/cladificacion señal.jpeg" width="600">
+</p>
+<p align="center">
+<em>Imagen 6. Clasificación de la señal.</em>
+</p>
 
 #### Transformada de Fourier a la señal y graficas:
 
-***- Transformada de la señal:*** 
+***- Transformada de la señal y densidad espectral de potencia:***
 
-***-Densidad espectral de potencia:***
+<p align="center">
+<img src="PARTE C/transformada y densidad.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica 10.Transformada de la señal y desidad espectral de potencia.</em>
+</p>
 
 #### Análisis de los estadísticos en el dominio de la frecuencia:
 
-***-Frecuencia media:***
+<p align="center">
+<img src="PARTE C/estadisticos dominio frecuencia.jpeg" width="600">
+</p>
+<p align="center">
+<em>Imagen 7.Datos estadisticos en el dominio de la frecuencia.</em>
+</p>
 
-***-Frecuencia mediana:***
-
-***-Desviación estándar:***
-
-***-Histograma de frecuencias:***
+<p align="center">
+<img src="PARTE C/histograma.jpeg" width="600">
+</p>
+<p align="center">
+<em>Grafica 11.Histograma.</em>
+</p>
 
 ## Análisis de resultados 
 
