@@ -135,7 +135,7 @@ h[n] = {5,6,0,0,9,4,8} - x[n] = {1,0,1,1,2,0,2,1,8,2}
 
 #### Señal 𝑦[𝑛] resultante de la convolución usando Python. 
 <p align="center">
-<img src="PARTE A/y(n) con python est 2.jpeg" width="600">
+<img src="PARTE A/y(n) con Python est 2.jpeg" width="600">
 </p>
 <p align="center">
 <em>Imagen 4. Calculo convolución con Python estudiante 2.</em>
@@ -144,7 +144,7 @@ h[n] = {5,6,0,0,9,4,8} - x[n] = {1,0,1,1,2,0,2,1,8,2}
 #### Representación gráfica usando Python. 
 
 <p align="center">
-<img src="PARTE A/convolucion Python est 2.jpeg" width="600">
+<img src="PARTE A/convolucion python est 2.jpeg" width="600">
 </p>
 <p align="center">
 <em>Grafica 8. Representación grafica usando Python estudiante 2.</em>
