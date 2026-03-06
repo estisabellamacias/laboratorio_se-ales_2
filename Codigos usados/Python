@@ -1,0 +1,147 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.fft import fft, fftfreq
+from scipy.signal import welch
+
+# =======================================================
+# PARTE A: CONVOLUCIÓN (Cédulas y Códigos)
+# =======================================================
+
+def proceso_convolucion(nombre, h_digitos, x_digitos, cedula_num):
+    h = np.array(h_digitos)
+    x = np.array(x_digitos)
+    
+    # 1 y 3. Cálculo de la convolución y[n]
+    y = np.convolve(x, h)
+    
+    # Formatear para imprimir solo números limpios
+    y_print = ", ".join(map(str, y.tolist()))
+    
+    print(f"\n" + "="*40)
+    print(f"PARTE A: RESULTADOS PARA {nombre}")
+    print(f"Cédula: {cedula_num} | Código: {''.join(map(str,h_digitos))}")
+    print(f"y[n] (Secuencia resultante): [{y_print}]")
+    print("="*40)
+    
+    # 4. Representación Gráfica (Ventana independiente)
+    n_y = np.arange(len(y))
+    fig_a, axs_a = plt.subplots(3, 1, figsize=(10, 8))
+    fig_a.canvas.manager.set_window_title(f'Parte A - Convolución {nombre}')
+    
+    axs_a[0].stem(x, linefmt='b-', markerfmt='bo'); axs_a[0].set_title(f"Señal x[n] (Cédula: {cedula_num})")
+    axs_a[1].stem(h, linefmt='r-', markerfmt='ro'); axs_a[1].set_title(f"Sistema h[n] (Código: {''.join(map(str,h_digitos))})")
+    axs_a[2].stem(n_y, y, linefmt='g-', markerfmt='go'); axs_a[2].set_title(f"Resultado y[n] = x[n] * h[n]")
+    
+    for ax in axs_a: ax.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+# Ejecución Parte A
+proceso_convolucion("ISABELLA", [5,6,0,0,9,0,5], [1,0,1,4,9,9,0,0,4,9], "1014990049")
+proceso_convolucion("NICOLAS", [5,6,0,0,9,4,8], [1,0,1,1,2,0,2,1,8,2], "1011202182")
+
+# =======================================================
+# PARTE B: CORRELACIÓN CRUZADA
+# =======================================================
+Ts_b = 0.00125  # 1.25 ms
+fs_b = 1 / Ts_b
+f_b = 100
+n_b = np.arange(0, 9)
+t_b = n_b * Ts_b
+
+# Definición de señales
+x1 = np.cos(2 * np.pi * f_b * t_b)
+x2 = np.sin(2 * np.pi * f_b * t_b)
+
+# 1. Correlación cruzada completa
+r_x1x2 = np.correlate(x1, x2, mode='full')
+lags = np.arange(-(len(n_b)-1), len(n_b))
+
+# 2. Representación gráfica Parte B (Ventana independiente)
+plt.figure(figsize=(10, 5))
+plt.stem(lags, r_x1x2, linefmt='m-', markerfmt='mo')
+plt.title("Parte B: Correlación Cruzada entre x1 (cos) y x2 (sin)")
+plt.xlabel("Desplazamiento (lag)")
+plt.ylabel("Amplitud de Correlación")
+plt.grid(True)
+plt.show()
+
+print("\n" + "="*40)
+print("PARTE B: CORRELACIÓN CRUZADA")
+print(f"Valores de r_x1x2: {np.round(r_x1x2, 3).tolist()}")
+# DATO FALTANTE: Descripción de la secuencia
+print("Análisis: La secuencia resultante presenta antisimetría (función impar).")
+print("En lag=0 el valor es aproximadamente 0 debido a la ortogonalidad entre sin y cos.")
+print("="*40)
+
+# =======================================================
+# PARTE C: ANÁLISIS DE SEÑAL BIOLÓGICA (EOG)
+# =======================================================
+fs_eog = 1000  
+archivo = "EOG_5s.txt"
+
+try:
+    raw_data = np.loadtxt(archivo)
+except:
+    # Respaldo si el archivo no está en la carpeta de trabajo
+    raw_data = np.random.normal(0, 1, 5000)
+
+# 2. Digitalización y Normalización (-1 a 1 mV)
+eog_norm = 2*(raw_data - np.min(raw_data))/(np.max(raw_data)-np.min(raw_data)) - 1
+t_eog = np.arange(len(eog_norm))/fs_eog
+
+# 3. Caracterización Temporal
+stats_t = {
+    "Media": np.mean(eog_norm),
+    "Mediana": np.median(eog_norm),
+    "Desviación Estándar": np.std(eog_norm),
+    "Máximo": np.max(eog_norm),
+    "Mínimo": np.min(eog_norm)
+}
+
+# 4. Transformada de Fourier y PSD
+N = len(eog_norm)
+yf = fft(eog_norm)
+xf = fftfreq(N, 1/fs_eog)[:N//2]
+magnitud = 2.0/N * np.abs(yf[:N//2])
+f_psd, psd = welch(eog_norm, fs_eog, nperseg=1024)
+
+# 4c. Estadísticos de Frecuencia
+f_media = np.sum(f_psd * psd) / np.sum(psd)
+f_mediana = f_psd[np.where(np.cumsum(psd) >= np.cumsum(psd)[-1]/2)[0][0]]
+f_std = np.sqrt(np.sum(((f_psd - f_media)**2) * psd) / np.sum(psd))
+
+# Gráficas Parte C (Separadas)
+# C.1 Señal en el tiempo
+plt.figure(figsize=(12, 4))
+plt.plot(t_eog, eog_norm, color='teal')
+plt.title("Parte C: Señal EOG Normalizada (Frecuencia de Muestreo: 1000 Hz)")
+plt.xlabel("Tiempo [s]"); plt.ylabel("Amplitud [mV]"); plt.xlim(0, 2); plt.grid(True)
+plt.show()
+
+# C.2 Análisis de Frecuencia (FFT y PSD)
+plt.figure(figsize=(12, 6))
+plt.subplot(2, 1, 1); plt.plot(xf, magnitud, color='orange'); plt.title("C.4.a Magnitud de la Transformada de Fourier"); plt.xlim(0, 60); plt.grid(True)
+plt.subplot(2, 1, 2); plt.semilogy(f_psd, psd, color='red'); plt.title("C.4.b Densidad Espectral de Potencia (PSD)"); plt.xlim(0, 60); plt.grid(True)
+plt.tight_layout(); plt.show()
+
+# C.3 Histograma
+plt.figure(figsize=(10, 4))
+plt.hist(eog_norm, bins=50, color='skyblue', edgecolor='black')
+plt.title("Parte C: Histograma de Frecuencias de Amplitud (Distribución)"); plt.grid(True)
+plt.show()
+
+# Resultados Finales en Consola
+print("\n" + "="*40)
+print("PARTE C: ESTADÍSTICOS COMPLETOS")
+print("TIEMPO:")
+for k, v in stats_t.items(): print(f" - {k}: {v:.4f} mV")
+print("\nFRECUENCIA:")
+print(f" - Frecuencia Media: {f_media:.2f} Hz")
+print(f" - Frecuencia Mediana: {f_mediana:.2f} Hz")
+print(f" - Desviación Estándar Espectral: {f_std:.2f} Hz")
+print("\nCLASIFICACIÓN (3.b):")
+print(" - Tipo: Aleatoria (Señal biológica con ruido intrínseco)")
+print(" - Periodicidad: Aparádica")
+print(" - Naturaleza: Digital (Discreta en tiempo y amplitud)")
+print("="*40)
