@@ -427,7 +427,7 @@ El código genera varias gráficas para facilitar la interpretación del anális
 ### Codigo en Python
 
 <p align="center">
-<img src="DIAGRAMAS DE FLUJO/Diagra,a de flujo python.jpeg" width="600">
+<img src="DIAGRAMAS DE FLUJO/Diagra,a de flujo python.png" width="600">
 </p>
 <p align="center">
 <em>Grafica 13. Diagrama de flujo codigo en Python.</em>
