@@ -1,6 +1,6 @@
 # **Convolución, correlación y transformada de Fourier**
 
-## *Contexto teorico* 
+## *Contexto teorico*
  La correlación y la convolución son operaciones básicas que realizamos para extraer información de señales o secuencias discretas e imágenes. Si bien estas operaciones son, en cierto sentido, unas de las más sencillas, son también extremadamente útiles. Además, al ser simples, se pueden analizar y comprender fácilmente, además de ser fáciles de implementar y calcular con gran eficiencia. La convolución se utiliza para filtrar linealmente una señal; por ejemplo, para suavizar un tren de picos y estimar la probabilidad de disparo. La correlación, por su parte, se utiliza para caracterizar las dependencias estadísticas entre dos señales. 
 
 ## *Objetivos* 
